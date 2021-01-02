@@ -1,0 +1,65 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int knapsack(vector<int>weights, vector<int> values, int n, int w, int current_index, int**dp)
+{
+if(n == 0 || w == 0)
+{
+return 0;//
+Because no item is there or only weight allowed is 0.
+}
+if(current_index > n)
+{
+return 0;
+//Index goes out of bound.
+}
+if(dp[current_index][w] != -1)
+{
+return dp[current_index][w];
+}
+int maxvalue = knapsack(weights, values, n, w, current_index + 1, dp);
+if(weights[current_index] <= w)
+{
+maxvalue = max(maxvalue,values[current_index] +  knapsack(weights,values, n, w - weights[current_index], current_index+1, dp));
+}
+return dp[current_index][w] = maxvalue;
+}
+
+
+int main()
+{
+int n, w;
+cin>>n>>w;
+vector<int> values;
+vector<int> weights;
+for(int item = 0;item<n;item++)
+{
+int value, weight;
+cin>>weight>>value;
+values.push_back(value);
+weights.push_back(weight);
+}
+
+//for every item we have two choices here!
+int ** dp = new int* [n+1];
+for(int i = 0;i<=n;i++)
+{
+dp[i] = new int[w +1];
+} 
+
+for(int i = 0;i<=n;i++)
+{
+for(int j = 0;j<=w;j++)
+{
+dp[i][j] = -1;
+}
+}
+
+int answer =  knapsack(weights,values, n, w, 0, dp);
+cout<<answer;
+
+//won't work for this test case!
+//1 1000000000
+//1000000000 10
+//Have to reduce the space complexity here. Use of 2d dp array with size n+1, 2 would be the solution for this.
+}
